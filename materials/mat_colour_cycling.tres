@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=2]
+
+[ext_resource path="res://src/shaders/colour_cycling.shader" type="Shader" id=1]
+[ext_resource path="res://assets/palette_main.png" type="Texture" id=2]
+
+[resource]
+shader = ExtResource( 1 )
+shader_param/cascade_speed = 0.3
+shader_param/cascade_color = Color( 0, 0.298039, 0.34902, 1 )
+shader_param/palettesize = 256
+shader_param/speed = 5.0
+shader_param/index1a = 0
+shader_param/index1b = 256
+shader_param/palette = ExtResource( 2 )
