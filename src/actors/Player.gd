@@ -1,78 +1,42 @@
 extends Actor
 
-signal player_stats_changed
-
-onready var anim_sprite = $AnimatedSprite
 var is_falling = false
 var last_velocity = Vector2.ZERO
 var bounce_velocity = Vector2.ZERO
 var bounce = false
-var has_jump_started = false
+var jump_active = false
 var release_jump =  false
 var compressed = false
 var compression_value = 0.0
-var death_count = 0
 
 func _ready() -> void:
-	emit_signal("player_stats_changed", self, 0)
-	anim_sprite.play("idle")
+	anim_sprite.play("idle") #idle on spawn
+	SignalBus.player_deaths = 0
+	SignalBus.connect("respawn", self, "_respawn")
 
-func die() -> void:
-	if !dead:
-		dead = true
-		anim_sprite.play("death")
-		death_count += 1
-		emit_signal("player_stats_changed", self, death_count)
-		
 
-func _process(delta: float) -> void:
-	if Input.is_key_pressed(KEY_ESCAPE):
-		die()
-	if Input.is_key_pressed(KEY_R):
-		respawn()
-
+	
 func _physics_process(delta: float) -> void:
 	
-	for i in get_slide_count():
-		var collision = get_slide_collision(i)
-		if collision.collider.name == "WorldDmg":
-			die()
-		
-	#bounce animation
-	bounce = has_fallen()
+	#if dead and not moving dont update physics
+	if dead and velocity == Vector2.ZERO: 
+		return
 	
-	if Input.is_action_pressed("jump") and is_on_floor() and !dead:
-		bounce = false
-		has_jump_started = true
-
-	
-	if bounce:
-		if bounce_velocity.y < -50.0:
-			anim_sprite.play("bounce_hard")
-		elif bounce_velocity.y < -10:
-			anim_sprite.play("bounce_soft")
-		
-	#set falling state
-	if velocity.y > 2.0:
-		 is_falling = true
-	else:
-		is_falling = false
-		
-	
-	
+	#jump input
+	jump_active = true if Input.is_action_pressed("jump") and is_on_floor() and !dead else false
 	release_jump = Input.is_action_just_released("jump")
-	if release_jump and !dead:
+	
+	if release_jump:
 		compressed = false
-		has_jump_started = false
-		anim_sprite.play("idle")
+		jump_active = false
+		if !dead: anim_sprite.play("idle")
 		
-
 	var direction: = get_direction()
 	
-	if has_jump_started and !compressed:
+	#add compression or jump force
+	if jump_active and !compressed:
 		compression_value += delta * 5
 		compression_value = clamp(compression_value,0.0,1.0)
-		#print(compression_value)
 		anim_sprite.play("jump")
 
 	velocity = calculate_move_velocity(velocity, direction, max_speed, jump_force)
@@ -82,50 +46,71 @@ func _physics_process(delta: float) -> void:
 func get_direction() -> Vector2:
 	if !dead:
 		return  Vector2(
-			0.0 if has_jump_started else (Input.get_action_strength("move_right") - Input.get_action_strength("move_left")),
+			0.0 if jump_active else (Input.get_action_strength("move_right") - Input.get_action_strength("move_left")),
 			-1.0 if release_jump and is_on_floor() else 1.0
 		)
 	else:
 		return Vector2.ZERO
-		
+
 func calculate_move_velocity(
 	linear_velocity: Vector2,
 	direction: Vector2,
 	speed: Vector2,
 	jump_force: float
 	) -> Vector2:
+		
+	#get current velocity		
 	var new_velocity: = linear_velocity
 	
+	#horizontal movement
 	new_velocity.x = speed.x * direction.x
+	
+	#apply gravity
 	new_velocity.y += gravity * get_physics_process_delta_time()
+	
+	#jump
 	if direction.y == -1.0:
 		new_velocity.y = (compression_value * jump_force) * direction.y + (velocity.x * 0.2) #force + dir + run and jump boost 
-		compression_value = 0.0
+		compression_value = 0.0 #reset compression
 	
-	if !has_jump_started:	
-		new_velocity.x = lerp(linear_velocity.x, new_velocity.x, get_physics_process_delta_time())
+	#slow active momentum if compressing
+	if jump_active:	
+		new_velocity.x -= clamp(linear_velocity.x * 3, 0, max_speed.x)
+		
+	#smooth movement
+	new_velocity.x = lerp(linear_velocity.x, new_velocity.x, get_physics_process_delta_time())
 	
-	if bounce:
+	#apply bounce
+	if check_bounce():
 		new_velocity.y += bounce_velocity.y
-		#print(new_velocity)
 	
+	#bounce off other surfaces
 	if is_on_wall() or is_on_ceiling():
 		new_velocity -= last_velocity * elasticity
-		
+	
+	#remember last velocity, used to detect how hard the player collided
 	last_velocity = velocity
 	
 	return new_velocity
 
-func has_fallen() -> bool:
-	if compressed or dead:
+#bounce off surfaces
+func check_bounce() -> bool:
+	
+	#dont do bounce
+	if dead or compressed or jump_active or Input.is_action_pressed("move_down"):
 		return false
 	
-	if velocity.y == 0.0 and is_falling:
-		bounce_velocity = -last_velocity * 0.8
+	#do bounce
+	if velocity == Vector2.ZERO and last_velocity != Vector2.ZERO and (is_on_floor() or is_on_wall() or is_on_ceiling()):
+		bounce_velocity = -last_velocity * elasticity
+		
+		#play bounce animation
+		if bounce_velocity.y < -50.0:
+			anim_sprite.play("bounce_hard")
+		elif bounce_velocity.y < -10:
+			anim_sprite.play("bounce_soft")
+		
 		return true
-	elif velocity.y > 0.0:
-		last_velocity.y = velocity.y
-		return false
 	else:
 		return false
 
@@ -134,11 +119,13 @@ func _on_AnimatedSprite_animation_finished() -> void:
 	
 	if dead:
 		anim_sprite.play("dead")
-		return 
-	
-	if (has_jump_started and !compressed) or compressed:
+	elif is_on_floor() and ((jump_active and !compressed) or compressed):
 		anim_sprite.play("compressed")
 		compressed = true
-	else:
+	else: #do default animation
 		anim_sprite.play("idle")
 		
+func _respawn():
+	dead = false
+	compressed = false
+	

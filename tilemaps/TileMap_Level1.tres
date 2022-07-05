@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=57 format=2]
+[gd_resource type="TileSet" load_steps=56 format=2]
 
 [ext_resource path="res://assets/BasicTilemap.png" type="Texture" id=1]
 
@@ -163,9 +163,6 @@ points = PoolVector2Array( 16, 10, 6, 10, 6, 0, 16, 0 )
 
 [sub_resource type="ConvexPolygonShape2D" id=54]
 points = PoolVector2Array( 10, 10, 0, 10, 0, 0, 10, 0 )
-
-[sub_resource type="ConvexPolygonShape2D" id=55]
-points = PoolVector2Array( 16, 16, 0, 16, 0, 6, 16, 6 )
 
 [resource]
 20/name = "BasicTilemap.png 20"
@@ -1078,24 +1075,137 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 6, 16, 6 )
 57/shape_one_way_margin = 0.0
 57/shapes = [  ]
 57/z_index = 0
-58/name = "BasicTilemap.png 58"
-58/texture = ExtResource( 1 )
-58/tex_offset = Vector2( 0, 0 )
-58/modulate = Color( 1, 1, 1, 1 )
-58/region = Rect2( 96, 144, 16, 16 )
-58/tile_mode = 0
-58/occluder_offset = Vector2( 0, 0 )
-58/navigation_offset = Vector2( 0, 0 )
-58/shape_offset = Vector2( 0, 0 )
-58/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-58/shape = SubResource( 55 )
-58/shape_one_way = false
-58/shape_one_way_margin = 1.0
-58/shapes = [ {
-"autotile_coord": Vector2( 0, 0 ),
-"one_way": false,
-"one_way_margin": 1.0,
-"shape": SubResource( 55 ),
-"shape_transform": Transform2D( 1, 0, 0, 1, 0, 0 )
-} ]
-58/z_index = 0
+59/name = "BasicTilemap.png 59"
+59/texture = ExtResource( 1 )
+59/tex_offset = Vector2( 0, 0 )
+59/modulate = Color( 1, 1, 1, 1 )
+59/region = Rect2( 112, 160, 16, 16 )
+59/tile_mode = 0
+59/occluder_offset = Vector2( 0, 0 )
+59/navigation_offset = Vector2( 0, 0 )
+59/shape_offset = Vector2( 0, 0 )
+59/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+59/shape_one_way = false
+59/shape_one_way_margin = 0.0
+59/shapes = [  ]
+59/z_index = 0
+60/name = "BasicTilemap.png 60"
+60/texture = ExtResource( 1 )
+60/tex_offset = Vector2( 0, 0 )
+60/modulate = Color( 1, 1, 1, 1 )
+60/region = Rect2( 128, 160, 16, 16 )
+60/tile_mode = 0
+60/occluder_offset = Vector2( 0, 0 )
+60/navigation_offset = Vector2( 0, 0 )
+60/shape_offset = Vector2( 0, 0 )
+60/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+60/shape_one_way = false
+60/shape_one_way_margin = 0.0
+60/shapes = [  ]
+60/z_index = 0
+61/name = "BasicTilemap.png 61"
+61/texture = ExtResource( 1 )
+61/tex_offset = Vector2( 0, 0 )
+61/modulate = Color( 1, 1, 1, 1 )
+61/region = Rect2( 144, 144, 48, 96 )
+61/tile_mode = 1
+61/autotile/bitmask_mode = 0
+61/autotile/bitmask_flags = [ Vector2( 0, 0 ), 256, Vector2( 0, 1 ), 260, Vector2( 0, 2 ), 4, Vector2( 0, 3 ), 69, Vector2( 0, 4 ), 65, Vector2( 0, 5 ), 321, Vector2( 1, 0 ), 320, Vector2( 1, 1 ), 325, Vector2( 1, 2 ), 5, Vector2( 1, 3 ), 5, Vector2( 1, 4 ), 325, Vector2( 1, 5 ), 320, Vector2( 2, 0 ), 64, Vector2( 2, 1 ), 65, Vector2( 2, 2 ), 1, Vector2( 2, 3 ), 261, Vector2( 2, 4 ), 260, Vector2( 2, 5 ), 324 ]
+61/autotile/icon_coordinate = Vector2( 0, 0 )
+61/autotile/tile_size = Vector2( 16, 16 )
+61/autotile/spacing = 0
+61/autotile/occluder_map = [  ]
+61/autotile/navpoly_map = [  ]
+61/autotile/priority_map = [  ]
+61/autotile/z_index_map = [  ]
+61/occluder_offset = Vector2( 0, 0 )
+61/navigation_offset = Vector2( 0, 0 )
+61/shape_offset = Vector2( 0, 0 )
+61/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+61/shape_one_way = false
+61/shape_one_way_margin = 0.0
+61/shapes = [  ]
+61/z_index = 0
+62/name = "BasicTilemap.png 62"
+62/texture = ExtResource( 1 )
+62/tex_offset = Vector2( 0, 0 )
+62/modulate = Color( 1, 1, 1, 1 )
+62/region = Rect2( 96, 208, 48, 48 )
+62/tile_mode = 1
+62/autotile/bitmask_mode = 0
+62/autotile/bitmask_flags = [ Vector2( 0, 0 ), 256, Vector2( 0, 1 ), 260, Vector2( 0, 2 ), 4, Vector2( 1, 0 ), 320, Vector2( 1, 1 ), 325, Vector2( 1, 2 ), 5, Vector2( 2, 0 ), 64, Vector2( 2, 1 ), 65, Vector2( 2, 2 ), 1 ]
+62/autotile/icon_coordinate = Vector2( 0, 0 )
+62/autotile/tile_size = Vector2( 16, 16 )
+62/autotile/spacing = 0
+62/autotile/occluder_map = [  ]
+62/autotile/navpoly_map = [  ]
+62/autotile/priority_map = [  ]
+62/autotile/z_index_map = [  ]
+62/occluder_offset = Vector2( 0, 0 )
+62/navigation_offset = Vector2( 0, 0 )
+62/shape_offset = Vector2( 0, 0 )
+62/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+62/shape_one_way = false
+62/shape_one_way_margin = 0.0
+62/shapes = [  ]
+62/z_index = 0
+63/name = "BasicTilemap.png 63"
+63/texture = ExtResource( 1 )
+63/tex_offset = Vector2( 0, 0 )
+63/modulate = Color( 1, 1, 1, 1 )
+63/region = Rect2( 64, 176, 32, 16 )
+63/tile_mode = 1
+63/autotile/bitmask_mode = 0
+63/autotile/bitmask_flags = [  ]
+63/autotile/icon_coordinate = Vector2( 0, 0 )
+63/autotile/tile_size = Vector2( 16, 16 )
+63/autotile/spacing = 0
+63/autotile/occluder_map = [  ]
+63/autotile/navpoly_map = [  ]
+63/autotile/priority_map = [  ]
+63/autotile/z_index_map = [  ]
+63/occluder_offset = Vector2( 0, 0 )
+63/navigation_offset = Vector2( 0, 0 )
+63/shape_offset = Vector2( 0, 0 )
+63/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+63/shape_one_way = false
+63/shape_one_way_margin = 0.0
+63/shapes = [  ]
+63/z_index = 0
+64/name = "BasicTilemap.png 64"
+64/texture = ExtResource( 1 )
+64/tex_offset = Vector2( 0, 0 )
+64/modulate = Color( 1, 1, 1, 1 )
+64/region = Rect2( 96, 176, 48, 16 )
+64/tile_mode = 1
+64/autotile/bitmask_mode = 0
+64/autotile/bitmask_flags = [  ]
+64/autotile/icon_coordinate = Vector2( 0, 0 )
+64/autotile/tile_size = Vector2( 16, 16 )
+64/autotile/spacing = 0
+64/autotile/occluder_map = [  ]
+64/autotile/navpoly_map = [  ]
+64/autotile/priority_map = [  ]
+64/autotile/z_index_map = [  ]
+64/occluder_offset = Vector2( 0, 0 )
+64/navigation_offset = Vector2( 0, 0 )
+64/shape_offset = Vector2( 0, 0 )
+64/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+64/shape_one_way = false
+64/shape_one_way_margin = 0.0
+64/shapes = [  ]
+64/z_index = 0
+65/name = "BasicTilemap.png 65"
+65/texture = ExtResource( 1 )
+65/tex_offset = Vector2( 0, 0 )
+65/modulate = Color( 1, 1, 1, 1 )
+65/region = Rect2( 96, 144, 16, 16 )
+65/tile_mode = 0
+65/occluder_offset = Vector2( 0, 0 )
+65/navigation_offset = Vector2( 0, 0 )
+65/shape_offset = Vector2( 0, 0 )
+65/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+65/shape_one_way = false
+65/shape_one_way_margin = 0.0
+65/shapes = [  ]
+65/z_index = 0

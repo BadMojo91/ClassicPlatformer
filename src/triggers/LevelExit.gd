@@ -1,8 +1,8 @@
 extends Area2D
 
+export var next_scene: PackedScene 
 
-
-func _on_Area2D_body_entered(body: Node) -> void:
-	if body.is_in_group("Player"):
-		print("win")
+func _on_LevelExit_body_entered(body: Node) -> void:
+	print("win")
+	SignalBus.emit_signal("load_level", next_scene)
 	
