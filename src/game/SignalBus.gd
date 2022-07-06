@@ -1,5 +1,6 @@
 extends Node
 
+#signal set_position(pos)
 signal set_spawn(origin)
 signal respawn()
 signal load_level(level)

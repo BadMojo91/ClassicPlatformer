@@ -17,24 +17,32 @@ func _ready() -> void:
 	SignalBus.connect("respawn", self, "_respawn")
 	connect("is_dead", self, "dead")
 
+func _process(delta: float) -> void:
+	if(!dead && !jump_active && !compressed && abs(velocity.x) > 0.5):
+		anim_sprite.play("Walk")
+		anim_sprite.speed_scale = abs(velocity.x) * 0.05
+		anim_sprite.flip_h = true if velocity.x < 0.0 else false
+#	elif bounce:
+#		#play bounce animation
+#		if bounce_velocity.y < -50.0:
+#			anim_sprite.play("bounce_hard")
+#		elif bounce_velocity.y < -10:
+#			anim_sprite.play("bounce_soft")
 
 	
-func _physics_process(delta: float) -> void:
+		
 	
+				
+func _physics_process(delta: float) -> void:
 	
 	#if dead and not moving dont update physics
 	if dead and velocity == Vector2.ZERO: 
 		return
 	
-	#jump input
+		#jump input
 	jump_active = true if Input.is_action_pressed("jump") and is_on_floor() and !dead else false
 	release_jump = Input.is_action_just_released("jump")
 	
-	if release_jump:
-		compressed = false
-		jump_active = false
-		if !dead: anim_sprite.play("idle")
-		
 	var direction: = get_direction()
 	
 	#add compression or jump force
@@ -42,9 +50,13 @@ func _physics_process(delta: float) -> void:
 		compression_value += delta * 5
 		compression_value = clamp(compression_value,0.0,1.0)
 		anim_sprite.play("jump")
+		anim_sprite.speed_scale = 1.0
+	
+	if release_jump:
+		compressed = false
+		jump_active = false
+		if !dead: anim_sprite.play("idle")
 
-	#if last_velocity != Vector2(0,0):
-		#print(str(velocity) + " " + str(last_velocity))
 	velocity = calculate_move_velocity(velocity, direction, max_speed, jump_force)
 	velocity = move_and_slide(velocity, FLOOR_NORMAL)
 	
@@ -87,19 +99,10 @@ func calculate_move_velocity(
 	new_velocity.x = lerp(linear_velocity.x, new_velocity.x, get_physics_process_delta_time())
 	
 	#apply bounce
-	if check_bounce():
-		new_velocity += bounce_velocity
+	bounce = check_bounce()
+	if bounce : new_velocity += bounce_velocity
 	
-	#bounce off other surfaces
-	#if is_on_wall() or is_on_ceiling():
-	#	new_velocity -= last_velocity * elasticity
-	
-	#remember last velocity, used to detect how hard the player collided
-	#if !is_on_floor() and !is_on_wall() and !is_on_ceiling():
-	#last_velocity = velocity
-		#print(last_velocity)
-	
-	
+	#remember current velocity
 	last_velocity = velocity
 	
 	return new_velocity
@@ -111,9 +114,7 @@ func check_bounce() -> bool:
 	if dead or compressed or jump_active or Input.is_action_pressed("move_down"):
 		return false
 	
-
 	#do bounce
-	#if ((is_on_floor() or is_on_ceiling()) and last_velocity.y > 0.0) or (is_on_wall() and last_velocity.x > 0.0):
 	var v = -last_velocity
 	var e = elasticity
 	var b = false
@@ -123,13 +124,6 @@ func check_bounce() -> bool:
 	if is_on_ceiling() or is_on_floor():
 		bounce_velocity.y = v.y * e #+ (v.y * 0.02)
 		b = true
-		
-	if b:
-		#play bounce animation
-		if bounce_velocity.y < -50.0:
-			anim_sprite.play("bounce_hard")
-		elif bounce_velocity.y < -10:
-			anim_sprite.play("bounce_soft")
 		
 	return b
 
@@ -148,10 +142,11 @@ func _respawn():
 	velocity = Vector2.ZERO
 	transform.origin = spawn_location
 	dead = false
-	dead = false
 	compressed = false
 	jump_active = false
 	release_jump = false
 	last_velocity = Vector2.ZERO
 	SignalBus.emit_signal("update_player_death_state", dead)
+	
+
 	

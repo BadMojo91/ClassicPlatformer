@@ -34,10 +34,12 @@ func die() -> void:
 		anim_sprite.play("death")
 		print("dead")
 
-	
 func _update_spawn_point(origin):
 	spawn_location = origin
 
-
-
+func _set_position(pos : Vector2, kill : bool):
+	global_position = pos
+	velocity = Vector2.ZERO
+	if kill:
+		die()
 

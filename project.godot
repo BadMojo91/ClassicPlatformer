@@ -26,7 +26,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-PixelPerfect="res://src/pixel_perfect.gd"
+PixelPerfect="res://src/utils/pixel_perfect.gd"
 SignalBus="*res://src/game/SignalBus.gd"
 
 [debug]
