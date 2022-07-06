@@ -1,0 +1,60 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "shader_type canvas_item;
+render_mode unshaded, blend_disabled;       // no bells and wistles
+uniform sampler2D palette;
+uniform sampler2D gradient;
+uniform bool colour_cycling_enabled;
+uniform float speed=10.0;
+uniform int colour_cycle_start_1;
+uniform int colour_cycle_length_1;
+
+
+int get_palette_index(sampler2D pal, vec3 col, float thresh) {
+	int size = textureSize(pal, 0).x;
+	int idx;
+	float last_dist = 1000.0;
+	for(int i = 0; i < size; i++)
+	{
+		ivec2 coords = ivec2(i,0);
+		vec3 p = texelFetch(pal, coords,0).rgb;
+		if(distance(p,col) < 0.05)
+			return i;
+		//float dist = distance(p, col.rgb);
+		//if(dist <= last_dist){
+		//	last_dist = dist;
+		//	idx = i;
+		//	}
+	}
+	
+	if(last_dist <= thresh)
+		return idx;
+	else
+		return -1;
+}
+
+void fragment() {
+	COLOR = texture(TEXTURE, UV);
+	int palette_size = textureSize(palette, 0).x; 
+	int gradient_size = textureSize(gradient, 0).x;
+	float fdelta = TIME * speed;
+	float mod2 = mod(fdelta,float(gradient_size));
+	int delta = int(mod2);
+	int pal_index = get_palette_index(palette, COLOR.rgb, 2.0);
+	int grad_index = get_palette_index(gradient, COLOR.rgb,  0.0);
+	if(colour_cycling_enabled){
+		if(grad_index >= 0)
+		{
+			grad_index += delta;
+			if(grad_index > gradient_size)
+				grad_index = 0;
+			COLOR.rgb = texelFetch(gradient, ivec2(grad_index,0),0).rgb;
+		}
+		else
+			COLOR.rgb = texelFetch(palette, ivec2(pal_index,0),0).rgb;
+	}
+	else
+		COLOR.rgb = texelFetch(palette, ivec2(pal_index,0),0).rgb;
+}
+"
