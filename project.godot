@@ -21,13 +21,17 @@ _global_script_class_icons={
 [application]
 
 config/name="Bounce"
-run/main_scene="res://levels/LevelTemplate.tscn"
+run/main_scene="res://prefabs/main_game.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 PixelPerfect="res://src/pixel_perfect.gd"
 SignalBus="*res://src/game/SignalBus.gd"
+
+[debug]
+
+settings/fps/force_fps=165
 
 [display]
 

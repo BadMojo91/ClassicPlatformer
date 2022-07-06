@@ -2,7 +2,8 @@ extends Node
 
 signal respawn()
 signal load_level(level)
-signal get_death_count(count)
+signal update_death_count(count)
+signal update_player_death_state(dead)
 signal kill()
 
 var player_deaths: int

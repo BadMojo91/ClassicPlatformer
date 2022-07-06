@@ -7,6 +7,8 @@ export var gravity: = 4000.0
 export var max_speed: = Vector2(50.0,1000.0)
 export var jump_force: = 150.0
 export var elasticity = 0.8
+
+var death_count = 0
 var dead = false
 var velocity: = Vector2.ZERO
 var spawn_location: = Vector2.ZERO
@@ -26,7 +28,8 @@ func _process(delta: float) -> void:
 func die() -> void:
 	if !dead: 
 		dead = true
-		SignalBus.player_deaths += 1
+		death_count += 1
+		SignalBus.emit_signal("update_death_count", death_count)
 		anim_sprite.play("death")
 		print("dead")
 

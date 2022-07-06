@@ -1,5 +1,7 @@
 extends Actor
 
+signal is_dead
+
 var is_falling = false
 var last_velocity = Vector2.ZERO
 var bounce_velocity = Vector2.ZERO
@@ -13,6 +15,7 @@ func _ready() -> void:
 	anim_sprite.play("idle") #idle on spawn
 	SignalBus.player_deaths = 0
 	SignalBus.connect("respawn", self, "_respawn")
+	connect("is_dead", self, "dead")
 
 
 	
@@ -82,11 +85,11 @@ func calculate_move_velocity(
 	
 	#apply bounce
 	if check_bounce():
-		new_velocity.y += bounce_velocity.y
+		new_velocity += bounce_velocity
 	
 	#bounce off other surfaces
-	if is_on_wall() or is_on_ceiling():
-		new_velocity -= last_velocity * elasticity
+	#if is_on_wall() or is_on_ceiling():
+	#	new_velocity -= last_velocity * elasticity
 	
 	#remember last velocity, used to detect how hard the player collided
 	last_velocity = velocity
@@ -102,7 +105,11 @@ func check_bounce() -> bool:
 	
 	#do bounce
 	if velocity == Vector2.ZERO and last_velocity != Vector2.ZERO and (is_on_floor() or is_on_wall() or is_on_ceiling()):
-		bounce_velocity = -last_velocity * elasticity
+		var v = -last_velocity
+		var e = elasticity
+		bounce_velocity = Vector2(
+							v.x * e,
+							v.y * e + fmod((e * 100), .2))
 		
 		#play bounce animation
 		if bounce_velocity.y < -50.0:
@@ -128,4 +135,5 @@ func _on_AnimatedSprite_animation_finished() -> void:
 func _respawn():
 	dead = false
 	compressed = false
+	SignalBus.emit_signal("update_player_death_state", dead)
 	

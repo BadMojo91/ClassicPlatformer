@@ -69,5 +69,4 @@ scale = Vector2( 1.4, 0.599995 )
 [node name="LevelExit" parent="." instance=ExtResource( 2 )]
 position = Vector2( 520, 472 )
 scale = Vector2( -1.5413, 1.54726 )
-collision_mask = 1
 next_scene = ExtResource( 3 )
