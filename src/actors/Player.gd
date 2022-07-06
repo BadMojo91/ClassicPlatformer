@@ -3,7 +3,7 @@ extends Actor
 signal is_dead
 
 var is_falling = false
-var last_velocity = Vector2.ZERO
+var last_velocity
 var bounce_velocity = Vector2.ZERO
 var bounce = false
 var jump_active = false
@@ -20,6 +20,7 @@ func _ready() -> void:
 
 	
 func _physics_process(delta: float) -> void:
+	
 	
 	#if dead and not moving dont update physics
 	if dead and velocity == Vector2.ZERO: 
@@ -42,6 +43,8 @@ func _physics_process(delta: float) -> void:
 		compression_value = clamp(compression_value,0.0,1.0)
 		anim_sprite.play("jump")
 
+	#if last_velocity != Vector2(0,0):
+		#print(str(velocity) + " " + str(last_velocity))
 	velocity = calculate_move_velocity(velocity, direction, max_speed, jump_force)
 	velocity = move_and_slide(velocity, FLOOR_NORMAL)
 	
@@ -92,34 +95,43 @@ func calculate_move_velocity(
 	#	new_velocity -= last_velocity * elasticity
 	
 	#remember last velocity, used to detect how hard the player collided
+	#if !is_on_floor() and !is_on_wall() and !is_on_ceiling():
+	#last_velocity = velocity
+		#print(last_velocity)
+	
+	
 	last_velocity = velocity
 	
 	return new_velocity
 
 #bounce off surfaces
 func check_bounce() -> bool:
-	
+	bounce_velocity = Vector2.ZERO
 	#dont do bounce
 	if dead or compressed or jump_active or Input.is_action_pressed("move_down"):
 		return false
 	
+
 	#do bounce
-	if velocity == Vector2.ZERO and last_velocity != Vector2.ZERO and (is_on_floor() or is_on_wall() or is_on_ceiling()):
-		var v = -last_velocity
-		var e = elasticity
-		bounce_velocity = Vector2(
-							v.x * e,
-							v.y * e + fmod((e * 100), .2))
+	#if ((is_on_floor() or is_on_ceiling()) and last_velocity.y > 0.0) or (is_on_wall() and last_velocity.x > 0.0):
+	var v = -last_velocity
+	var e = elasticity
+	var b = false
+	if  is_on_wall():
+		bounce_velocity.x = v.x * e
+		b = true
+	if is_on_ceiling() or is_on_floor():
+		bounce_velocity.y = v.y * e #+ (v.y * 0.02)
+		b = true
 		
+	if b:
 		#play bounce animation
 		if bounce_velocity.y < -50.0:
 			anim_sprite.play("bounce_hard")
 		elif bounce_velocity.y < -10:
 			anim_sprite.play("bounce_soft")
 		
-		return true
-	else:
-		return false
+	return b
 
 
 func _on_AnimatedSprite_animation_finished() -> void:
@@ -133,7 +145,13 @@ func _on_AnimatedSprite_animation_finished() -> void:
 		anim_sprite.play("idle")
 		
 func _respawn():
+	velocity = Vector2.ZERO
+	transform.origin = spawn_location
+	dead = false
 	dead = false
 	compressed = false
+	jump_active = false
+	release_jump = false
+	last_velocity = Vector2.ZERO
 	SignalBus.emit_signal("update_player_death_state", dead)
 	

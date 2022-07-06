@@ -82,9 +82,10 @@ func spawn_player() -> bool:
 		add_child(current_player)
 		
 	#set player origin	
-	current_player.transform.origin = spawn_location
+	SignalBus.emit_signal("set_spawn", spawn_location)
+	SignalBus.emit_signal("respawn")
 	
 	return true
 	
-func _respawn():
-	current_player.transform.origin = spawn_location
+#func _respawn():
+#	current_player.transform.origin = spawn_location
