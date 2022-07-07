@@ -1,10 +1,16 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://levels/Level3.tscn" type="PackedScene" id=1]
+[ext_resource path="res://levels/Level4.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/game/game.gd" type="Script" id=2]
 [ext_resource path="res://prefabs/Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/ui/GUI.gd" type="Script" id=4]
 [ext_resource path="res://assets/space_backdrop.png" type="Texture" id=5]
+[ext_resource path="res://src/ui/Time_Counter.gd" type="Script" id=6]
+[ext_resource path="res://src/ui/Death_Counter.gd" type="Script" id=7]
+[ext_resource path="res://src/ui/Level_Counter.gd" type="Script" id=8]
+[ext_resource path="res://src/ui/Completed_Levels_Counter.gd" type="Script" id=9]
+[ext_resource path="res://theme_main.tres" type="Theme" id=10]
+[ext_resource path="res://src/ui/Score_Counter.gd" type="Script" id=11]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0, 0.0823529, 0.52549, 1 )
@@ -32,29 +38,111 @@ custom_styles/panel = SubResource( 1 )
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_constants/separation = 128
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 2.0
+margin_bottom = 2.0
+rect_min_size = Vector2( 320, 16 )
 
 [node name="Death_Text" type="RichTextLabel" parent="CanvasLayer/Panel/HBoxContainer"]
+margin_right = 38.0
 margin_bottom = 16.0
+rect_min_size = Vector2( 38, 16 )
+rect_clip_content = false
+theme = ExtResource( 10 )
 text = "Deaths:"
+scroll_active = false
 
 [node name="Death_Count" type="RichTextLabel" parent="CanvasLayer/Panel/HBoxContainer"]
-margin_left = 128.0
-margin_right = 128.0
+margin_left = 42.0
+margin_right = 94.0
 margin_bottom = 16.0
-text = "0000"
+rect_min_size = Vector2( 52, 16 )
+rect_clip_content = false
+theme = ExtResource( 10 )
+scroll_active = false
+script = ExtResource( 7 )
 
 [node name="Time_Text" type="RichTextLabel" parent="CanvasLayer/Panel/HBoxContainer"]
-margin_left = 256.0
-margin_right = 256.0
+margin_left = 98.0
+margin_right = 126.0
 margin_bottom = 16.0
+rect_min_size = Vector2( 28, 16 )
+rect_clip_content = false
+theme = ExtResource( 10 )
 text = "Time:"
+scroll_active = false
 
 [node name="Time_Count" type="RichTextLabel" parent="CanvasLayer/Panel/HBoxContainer"]
-margin_left = 384.0
-margin_right = 384.0
+margin_left = 130.0
+margin_right = 172.0
 margin_bottom = 16.0
-text = "00:00:00"
+rect_min_size = Vector2( 42, 16 )
+rect_clip_content = false
+theme = ExtResource( 10 )
+scroll_active = false
+script = ExtResource( 6 )
+
+[node name="Completed_Text" type="RichTextLabel" parent="CanvasLayer/Panel/HBoxContainer"]
+margin_left = 176.0
+margin_right = 228.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 52, 16 )
+rect_clip_content = false
+theme = ExtResource( 10 )
+text = "Completed:"
+scroll_active = false
+
+[node name="Completed_Count" type="RichTextLabel" parent="CanvasLayer/Panel/HBoxContainer"]
+margin_left = 232.0
+margin_right = 264.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 32, 16 )
+rect_clip_content = false
+theme = ExtResource( 10 )
+scroll_active = false
+script = ExtResource( 9 )
+
+[node name="Score_Text" type="RichTextLabel" parent="CanvasLayer/Panel/HBoxContainer"]
+margin_left = 268.0
+margin_right = 300.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 32, 16 )
+rect_clip_content = false
+theme = ExtResource( 10 )
+text = "Score:"
+scroll_active = false
+
+[node name="Score_Count" type="RichTextLabel" parent="CanvasLayer/Panel/HBoxContainer"]
+margin_left = 304.0
+margin_right = 356.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 52, 16 )
+rect_clip_content = false
+theme = ExtResource( 10 )
+text = "000000000"
+scroll_active = false
+script = ExtResource( 11 )
+
+[node name="Level_Text" type="RichTextLabel" parent="CanvasLayer/Panel/HBoxContainer"]
+margin_left = 360.0
+margin_right = 392.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 32, 16 )
+rect_clip_content = false
+theme = ExtResource( 10 )
+text = "Level:"
+scroll_active = false
+
+[node name="Level_Count" type="RichTextLabel" parent="CanvasLayer/Panel/HBoxContainer"]
+margin_left = 396.0
+margin_right = 448.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 52, 16 )
+rect_clip_content = false
+theme = ExtResource( 10 )
+scroll_active = false
+script = ExtResource( 8 )
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 scroll_limit_begin = Vector2( 0, 5 )

@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://tilemaps/TileMap_Level1.tres" type="TileSet" id=1]
 [ext_resource path="res://prefabs/HurtTrigger.tscn" type="PackedScene" id=2]
 [ext_resource path="res://prefabs/LevelExit.tscn" type="PackedScene" id=3]
 [ext_resource path="res://prefabs/PlayerSpawn.tscn" type="PackedScene" id=4]
 [ext_resource path="res://levels/level1.tscn" type="PackedScene" id=5]
+[ext_resource path="res://prefabs/ItemPickup.tscn" type="PackedScene" id=6]
 
 [node name="LevelTemplate" type="Node2D"]
 
@@ -66,3 +67,6 @@ next_scene = ExtResource( 5 )
 
 [node name="PlayerSpawn" parent="." instance=ExtResource( 4 )]
 position = Vector2( 243, 239 )
+
+[node name="ItemPickup" parent="." instance=ExtResource( 6 )]
+position = Vector2( 306, 216 )

@@ -1,0 +1,14 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "shader_type canvas_item;
+uniform float brightness = 1.0;
+uniform bool enable_tint = false;
+uniform vec4 tint;
+
+void fragment(){
+	COLOR = texture(TEXTURE,UV);
+	vec3 b = COLOR.rgb;
+	b = b * brightness;
+	COLOR.rgb = b;
+}"

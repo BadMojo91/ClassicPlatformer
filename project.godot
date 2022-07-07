@@ -43,6 +43,12 @@ window/vsync/use_vsync=false
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
 
+[importer_defaults]
+
+texture={
+"flags/filter": false
+}
+
 [input]
 
 ui_left={

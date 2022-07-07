@@ -7,7 +7,7 @@ export var gravity: = 185.0
 export var max_speed: = Vector2(300,1000.0)
 export var jump_force: = 200.0
 export var elasticity = 0.6
-
+export var boost = 75.0
 var death_count = 0
 var dead = false
 var velocity: = Vector2.ZERO
@@ -32,6 +32,7 @@ func die() -> void:
 		death_count += 1
 		SignalBus.emit_signal("update_death_count", death_count)
 		anim_sprite.play("death")
+		anim_sprite.speed_scale = 1.0
 		print("dead")
 
 func _update_spawn_point(origin):

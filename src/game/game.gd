@@ -10,7 +10,7 @@ var root: Node
 func _ready() -> void:
 	SignalBus.connect("respawn", self, "_respawn")
 	SignalBus.connect("load_level", self, "_load_level")
-	_load_level(first_level)
+	SignalBus.emit_signal("load_level", first_level)
 	
 func _load_level(level: PackedScene):
 	#unload current level
@@ -22,13 +22,14 @@ func _load_level(level: PackedScene):
 	
 	#add level to root 
 	var root = get_tree().current_scene
-	print("loading " + first_level.resource_name)
+	print("loading " + level.resource_name)
 	current_level = level.instance()
 	self.add_child(current_level)
 	
 	spawn_player()
-	
-	print(current_level.name + " has loaded") 
+	var level_name = current_level.name
+	print(level_name + " has loaded") 
+	SignalBus.emit_signal("update_level_name", level_name)
 	return
 	
 func unload_level() -> void:

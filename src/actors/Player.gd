@@ -7,9 +7,15 @@ var last_velocity
 var bounce_velocity = Vector2.ZERO
 var bounce = false
 var jump_active = false
+var boost_active = false
+var boost_just_pressed = false
 var release_jump =  false
 var compressed = false
 var compression_value = 0.0
+var boost_count = 0
+
+var is_on_slope = false
+var is_up_slope =  false
 
 func _ready() -> void:
 	anim_sprite.play("idle") #idle on spawn
@@ -17,6 +23,7 @@ func _ready() -> void:
 	SignalBus.connect("respawn", self, "_respawn")
 	connect("is_dead", self, "dead")
 
+	 
 func _process(delta: float) -> void:
 	if(!dead && !jump_active && !compressed && abs(velocity.x) > 0.5):
 		anim_sprite.play("Walk")
@@ -28,10 +35,6 @@ func _process(delta: float) -> void:
 #			anim_sprite.play("bounce_hard")
 #		elif bounce_velocity.y < -10:
 #			anim_sprite.play("bounce_soft")
-
-	
-		
-	
 				
 func _physics_process(delta: float) -> void:
 	
@@ -41,14 +44,15 @@ func _physics_process(delta: float) -> void:
 	
 		#jump input
 	jump_active = true if Input.is_action_pressed("jump") and is_on_floor() and !dead else false
+	boost_active = true if Input.is_action_pressed("move_up") and is_on_floor() and !dead else false
+	boost_just_pressed = true if Input.is_action_just_pressed("move_up") and !is_on_floor() else false
 	release_jump = Input.is_action_just_released("jump")
 	
 	var direction: = get_direction()
 	
 	#add compression or jump force
 	if jump_active and !compressed:
-		compression_value += delta * 5
-		compression_value = clamp(compression_value,0.0,1.0)
+		boost_count = 1
 		anim_sprite.play("jump")
 		anim_sprite.speed_scale = 1.0
 	
@@ -56,7 +60,7 @@ func _physics_process(delta: float) -> void:
 		compressed = false
 		jump_active = false
 		if !dead: anim_sprite.play("idle")
-
+			
 	velocity = calculate_move_velocity(velocity, direction, max_speed, jump_force)
 	velocity = move_and_slide(velocity, FLOOR_NORMAL)
 	
@@ -88,13 +92,19 @@ func calculate_move_velocity(
 	
 	#jump
 	if direction.y == -1.0:
-		new_velocity.y = (compression_value * jump_force) * direction.y + (velocity.x * 0.2) #force + dir + run and jump boost 
+		var j_force = jump_force + (boost if boost_active else 0.0)
+		new_velocity.y = (compression_value * j_force) * direction.y + (velocity.x * 0.2) #force + dir + run and jump boost 
 		compression_value = 0.0 #reset compression
 	
 	#slow active momentum if compressing
 	if jump_active:	
 		new_velocity.x -= clamp(linear_velocity.x * 3, 0, max_speed.x)
-		
+	
+	#do a boost mid air
+	if boost_just_pressed && boost_count > 0:
+		new_velocity.y -= boost
+		boost_count -= 1
+			
 	#smooth movement
 	new_velocity.x = lerp(linear_velocity.x, new_velocity.x, get_physics_process_delta_time())
 	
@@ -149,4 +159,11 @@ func _respawn():
 	SignalBus.emit_signal("update_player_death_state", dead)
 	
 
+	
+
+
+func _on_AnimatedSprite_frame_changed() -> void:
+	if (jump_active && !compressed):
+		var frame_delta = float(anim_sprite.frame) / float(anim_sprite.frames.get_frame_count("jump"))
+		compression_value = frame_delta
 	
