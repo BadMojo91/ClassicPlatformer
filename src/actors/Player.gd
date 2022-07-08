@@ -2,6 +2,8 @@ extends Actor
 
 signal is_dead
 
+onready var ray = $RayCast2D
+
 var is_falling = false
 var last_velocity
 var bounce_velocity = Vector2.ZERO
@@ -45,7 +47,7 @@ func _physics_process(delta: float) -> void:
 		#jump input
 	jump_active = true if Input.is_action_pressed("jump") and is_on_floor() and !dead else false
 	boost_active = true if Input.is_action_pressed("move_up") and is_on_floor() and !dead else false
-	boost_just_pressed = true if Input.is_action_just_pressed("move_up") and !is_on_floor() else false
+	boost_just_pressed = true if Input.is_action_just_pressed("jump") and !is_on_floor() else false
 	release_jump = Input.is_action_just_released("jump")
 	
 	var direction: = get_direction()
@@ -81,6 +83,7 @@ func calculate_move_velocity(
 	jump_force: float
 	) -> Vector2:
 		
+	
 	#get current velocity		
 	var new_velocity: = linear_velocity
 	
@@ -112,6 +115,10 @@ func calculate_move_velocity(
 	bounce = check_bounce()
 	if bounce : new_velocity += bounce_velocity
 	
+	if(check_is_on_slope(Vector2(direction.x,0.0)) && is_on_floor()):
+		new_velocity.y -= tan(0.785398) * abs(direction.x * speed.x*0.1)
+	
+	
 	#remember current velocity
 	last_velocity = velocity
 	
@@ -138,6 +145,20 @@ func check_bounce() -> bool:
 	return b
 
 
+func check_is_on_slope(dir: Vector2) -> bool:
+	ray.set_cast_to(dir * 9.0)
+	if(ray.get_collider() != null):
+		var h_normal = ray.get_collision_normal().angle()
+		print(h_normal)
+		return true
+	
+	return false
+
+		
+
+
+
+
 func _on_AnimatedSprite_animation_finished() -> void:
 	
 	if dead:
@@ -159,7 +180,7 @@ func _respawn():
 	SignalBus.emit_signal("update_player_death_state", dead)
 	
 
-	
+
 
 
 func _on_AnimatedSprite_frame_changed() -> void:

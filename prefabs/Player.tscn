@@ -161,5 +161,11 @@ current = true
 smoothing_enabled = true
 smoothing_speed = 2.0
 
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2( 0, 8 )
+enabled = true
+collision_mask = 8
+collide_with_areas = true
+
 [connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
 [connection signal="frame_changed" from="AnimatedSprite" to="." method="_on_AnimatedSprite_frame_changed"]
