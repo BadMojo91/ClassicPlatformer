@@ -31,6 +31,7 @@ func _process(delta: float) -> void:
 		anim_sprite.play("Walk")
 		anim_sprite.speed_scale = abs(velocity.x) * 0.05
 		anim_sprite.flip_h = true if velocity.x < 0.0 else false
+		
 #	elif bounce:
 #		#play bounce animation
 #		if bounce_velocity.y < -50.0:
@@ -44,6 +45,9 @@ func _physics_process(delta: float) -> void:
 	if dead and velocity == Vector2.ZERO: 
 		return
 	
+	#if velocity.y == 0.000:
+	#	boost_count = 0
+	
 		#jump input
 	jump_active = true if Input.is_action_pressed("jump") and is_on_floor() and !dead else false
 	boost_active = true if Input.is_action_pressed("move_up") and is_on_floor() and !dead else false
@@ -51,6 +55,7 @@ func _physics_process(delta: float) -> void:
 	release_jump = Input.is_action_just_released("jump")
 	
 	var direction: = get_direction()
+		
 	
 	#add compression or jump force
 	if jump_active and !compressed:
@@ -62,11 +67,12 @@ func _physics_process(delta: float) -> void:
 		compressed = false
 		jump_active = false
 		if !dead: anim_sprite.play("idle")
-			
+
 	velocity = calculate_move_velocity(velocity, direction, max_speed, jump_force)
 	velocity = move_and_slide(velocity, FLOOR_NORMAL)
 	
 	
+		
 func get_direction() -> Vector2:
 	if !dead:
 		return  Vector2(
@@ -102,7 +108,7 @@ func calculate_move_velocity(
 	#slow active momentum if compressing
 	if jump_active:	
 		new_velocity.x -= clamp(linear_velocity.x * 3, 0, max_speed.x)
-	
+
 	#do a boost mid air
 	if boost_just_pressed && boost_count > 0:
 		new_velocity.y -= boost
@@ -156,9 +162,6 @@ func check_is_on_slope(dir: Vector2) -> bool:
 
 		
 
-
-
-
 func _on_AnimatedSprite_animation_finished() -> void:
 	
 	if dead:
@@ -179,9 +182,6 @@ func _respawn():
 	last_velocity = Vector2.ZERO
 	SignalBus.emit_signal("update_player_death_state", dead)
 	
-
-
-
 
 func _on_AnimatedSprite_frame_changed() -> void:
 	if (jump_active && !compressed):
